@@ -1,0 +1,100 @@
+<div class="container mt-4">
+
+<form  [formGroup]="formorder"  (ngSubmit)="SaveData()">
+
+<div class="row">
+
+  <div class="col-6">
+    <mat-form-field appearance="fill">
+      <mat-label>Transaction Date </mat-label>
+      <input formControlName="TransactionDate" matInput [matDatepicker]="picker">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+
+  <div class="col-6">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Name </mat-label>
+      <input type="text" formControlName="CustomerName" class="formcontroll" matInput placeholder=" " >
+    </mat-form-field>
+  </div>
+
+
+</div>
+<div class="row">
+
+
+  <div class="col-md-6">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Driving License No. </mat-label>
+      <input type="text" formControlName="DrivingLicenseNo" class="formcontroll" matInput placeholder="" >
+    </mat-form-field>
+  </div>
+
+
+  <div class="col-6">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Payment </mat-label>
+      <input type="text" formControlName="Payment" class="formcontroll" matInput placeholder="Ex. 400000" >
+    </mat-form-field>
+  </div>
+
+
+</div>
+
+
+<h4>Nationality </h4>
+<mat-form-field appearance="fill">
+  <mat-label>Nationality</mat-label>
+  <mat-select formControlName="CustomerNationality">
+    <mat-option  *ngFor="let nation of Nation" [value]="nation">
+      {{nation}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+<hr>
+<h4>Brands </h4>
+
+<select   class="form-select-lg" #idbrand  (change)="ChangBrand($event.target)"  >
+  <option [value]="0" > --Please Select Brand--</option>
+
+  <option   *ngFor="let brand of Brands" [value]="brand.id" > {{brand.name}}</option>
+</select>
+<span *ngIf="masseg" class="text-danger" >{{masseg}}</span>
+<table class="table ">
+
+<thead>
+<th>Car Name</th>
+<th>Quantity of Cars</th>
+<th>Rent Duration </th>
+<th><button (click)="addOrder(idbrand.value)" type="button"  class="btn btn-outline-success" >Add New</button></th>
+</thead>
+<tbody  formArrayName="order"  *ngFor="let ord of order.controls; let i=index">
+  <tr [formGroupName]="i">
+  <td>
+    <select [class.is-invalid]="order.controls[i].get('carId')?.value==-1" (change)="ChangModel($event.target,i)" class="form-select"    formControlName="carId"  >
+      <option   [value]="car.id"  *ngFor="let car of Cars"  >
+      <div  *ngIf="IsTrue(car.id)" >  {{car.modelName }}  </div>
+      </option>
+    </select>
+    <div class="text-danger" *ngIf="order.controls[i].get('carId')?.value==-1" >{{samecar}}</div>
+</td>
+<td><input class="form-control" min="1" type="number" formControlName="quantity" /></td>
+<td><input class="form-control" type="datetime-local" formControlName="rentDuration" /></td>
+<td><button (click)="Remove(i)"  class="btn btn-danger" >Remove</button></td>
+</tr>
+</tbody>
+
+</table>
+<div class="text-center mt-5">
+<button [disabled]="formorder.invalid ||isinvalidorder"   type="submit"  class="btn btn-outline-danger px-4" >Save</button>
+<button style="margin-left: 5%;" (click)="Close()"  type="button"  class="btn btn-dark px-4" >Close</button>
+</div>
+</form>
+
+</div>
